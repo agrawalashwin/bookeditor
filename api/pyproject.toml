@@ -2,19 +2,24 @@
 name = "bookeditor-api"
 version = "0.1.0"
 description = "FastAPI backend for BookEditor MVP"
-packages = ["app"]
+packages = [{ include = "app" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
 fastapi = "^0.100.0"
 uvicorn = "^0.22.0"
-psycopg[binary] = "^3.0.11"
+psycopg = {extras = ["binary"], version = "^3.0.11"}
 sqlalchemy = "^2.0.20"
 alembic = "^1.11.0"
 python-dotenv = "^1.0.0"
-pgvector = "^0.7.1"
+pgvector = "^0.4.1"
 pydantic = "^1.10.11"
 httpx = "^0.24.0"
+openai = "^1.0.0"
+tiktoken = "^0.5.0"
+numpy = "^1.24.0"
+python-docx = "^1.1.0"
+diff-match-patch = "^20230430"
 
 [tool.poetry.dev-dependencies]
 pytest = "^8.4.0"

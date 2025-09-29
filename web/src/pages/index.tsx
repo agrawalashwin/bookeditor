@@ -1,11 +1,15 @@
-import { useState } from 'react'
+import React from 'react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import BookEditor from '../components/BookEditor'
+
+const queryClient = new QueryClient()
 
 export default function Home() {
-  const [text, setText] = useState('')
   return (
-    <div style={{ padding: 24 }}>
-      <h1>BookEditor (MVP)</h1>
-      <textarea value={text} onChange={(e) => setText(e.target.value)} rows={20} cols={80} />
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div style={{ height: '100vh', overflow: 'hidden' }}>
+        <BookEditor />
+      </div>
+    </QueryClientProvider>
   )
 }

@@ -1,0 +1,88 @@
+.diffViewer {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.preview {
+  padding: 0.75rem;
+  cursor: pointer;
+  background: #fafafa;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s;
+}
+
+.preview:hover {
+  background: #f0f0f0;
+}
+
+.previewText {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.toggleButton {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.fullDiff {
+  background: white;
+}
+
+.sideBySide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: #e0e0e0;
+}
+
+.beforeColumn,
+.afterColumn {
+  background: white;
+}
+
+.columnHeader {
+  padding: 0.5rem 0.75rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.diffContent {
+  padding: 0.75rem;
+  min-height: 60px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.removedText {
+  background: #ffeaea;
+  color: #d73a49;
+  padding: 0.25rem;
+  border-radius: 3px;
+  border-left: 3px solid #d73a49;
+}
+
+.addedText {
+  background: #e6ffed;
+  color: #28a745;
+  padding: 0.25rem;
+  border-radius: 3px;
+  border-left: 3px solid #28a745;
+}
+
+.noChanges {
+  padding: 1rem;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  font-size: 0.85rem;
+}

@@ -1,7 +1,36 @@
 node_modules/
 dist/
 .env
+.env.local
+.env.dev
+.env.production
+*.env
 .DS_Store
 .vscode/
 coverage/
 .idea/
+
+# Python
+__pycache__/
+*.py[cod]
+api/.venv/
+api/venv/
+poetry.lock
+
+# Next.js
+web/.next/
+web/out/
+
+# User content
+current_manuscript_id.txt
+*_extracted.txt
+*.docx
+*.doc
+
+# Database
+*.db
+*.sqlite
+
+# Logs
+*.log
+logs/
