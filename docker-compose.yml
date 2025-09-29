@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: ankane/pgvector:postgres-15
+    environment:
+      POSTGRES_DB: bookeditor
+      POSTGRES_USER: bookeditor
+      POSTGRES_PASSWORD: password
+    ports:
+      - '5432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  api:
+    build: ./api
+    env_file: ./api/.env.dev
+    depends_on:
+      - postgres
+    ports:
+      - '8000:8000'
+
+  web:
+    build: ./web
+    ports:
+      - '3000:3000'
+    depends_on:
+      - api
+
+volumes:
+  db-data:
