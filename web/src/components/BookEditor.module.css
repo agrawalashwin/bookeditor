@@ -38,6 +38,18 @@
   background: #f0f0f0;
 }
 
+.undoButton {
+  background: #fff3cd !important;
+  border-color: #ffc107 !important;
+  color: #856404 !important;
+  font-weight: 500;
+}
+
+.undoButton:hover {
+  background: #ffe69c !important;
+  border-color: #ffb300 !important;
+}
+
 .content {
   flex: 1;
   display: flex;

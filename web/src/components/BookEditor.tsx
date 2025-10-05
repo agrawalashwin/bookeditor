@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { manuscriptApi, editApi, EditOption } from '../lib/api';
 import ManuscriptViewer from './ManuscriptViewer';
 import EditConsole from './EditConsole';
+import VersionHistory from './VersionHistory';
 import styles from './BookEditor.module.css';
 
 interface Selection {
@@ -17,6 +18,7 @@ const BookEditor: React.FC = () => {
   const [editSessionId, setEditSessionId] = useState<string | null>(null);
   const [editOptions, setEditOptions] = useState<EditOption[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const queryClient = useQueryClient();
 
   // Load or create manuscript
@@ -196,6 +198,57 @@ Sarah had always thought her grandmother's stories were just fairy tales, but no
     }
   };
 
+  const handleUndo = async () => {
+    if (!manuscriptId) return;
+
+    try {
+      // Get version history
+      const history = await manuscriptApi.getHistory(manuscriptId);
+
+      if (!history.versions || history.versions.length < 2) {
+        alert('No previous version to undo to.');
+        return;
+      }
+
+      // Get the previous version (second in the list, since first is current)
+      const previousVersion = history.versions[1];
+
+      const confirmed = window.confirm(
+        `Undo to previous version?\n\n` +
+        `Current: ${history.versions[0].version_tag}\n` +
+        `Previous: ${previousVersion.version_tag}\n\n` +
+        `This will revert your last change.`
+      );
+
+      if (!confirmed) return;
+
+      // Revert to previous version
+      await manuscriptApi.revert(manuscriptId, previousVersion.id);
+
+      // Refresh the manuscript content
+      await refetchContent();
+
+      alert('Successfully undone last change!');
+    } catch (error) {
+      console.error('Undo failed:', error);
+      alert('Failed to undo. Check console for details.');
+    }
+  };
+
+  const handleRevertToVersion = async (versionId: string) => {
+    if (!manuscriptId) return;
+
+    try {
+      await manuscriptApi.revert(manuscriptId, versionId);
+      await refetchContent();
+      setShowHistory(false);
+      alert('Successfully restored to selected version!');
+    } catch (error) {
+      console.error('Revert failed:', error);
+      alert('Failed to restore version. Check console for details.');
+    }
+  };
+
   if (!manuscriptId || !manuscriptContent) {
     return <div className={styles.loading}>Loading manuscript...</div>;
   }
@@ -205,6 +258,8 @@ Sarah had always thought her grandmother's stories were just fairy tales, but no
       <div className={styles.header}>
         <h1>{manuscript?.title || 'Untitled'}</h1>
         <div className={styles.headerActions}>
+          <button onClick={handleUndo} className={styles.undoButton}>↶ Undo Last Change</button>
+          <button onClick={() => setShowHistory(true)}>📜 View History</button>
           <button onClick={handleIngest}>Process Embeddings</button>
           <button onClick={() => handleExport('markdown')}>Export MD</button>
           <button onClick={() => handleExport('docx')}>Export DOCX</button>
@@ -219,7 +274,7 @@ Sarah had always thought her grandmother's stories were just fairy tales, but no
             selection={selection}
           />
         </div>
-        
+
         <div className={styles.rightPane}>
           <EditConsole
             selection={selection}
@@ -230,6 +285,14 @@ Sarah had always thought her grandmother's stories were just fairy tales, but no
           />
         </div>
       </div>
+
+      {showHistory && manuscriptId && (
+        <VersionHistory
+          manuscriptId={manuscriptId}
+          onClose={() => setShowHistory(false)}
+          onRevert={handleRevertToVersion}
+        />
+      )}
     </div>
   );
 };
