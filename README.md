@@ -34,7 +34,7 @@ A lightweight, reliable editing companion for manuscripts that provides AI-power
 1. **Clone and install dependencies:**
 
    ```bash
-   git clone https://github.com/yourusername/bookeditor.git
+   git clone https://github.com/agrawalashwin/bookeditor.git
    cd bookeditor
    make install
    ```
