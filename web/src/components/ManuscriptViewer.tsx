@@ -29,17 +29,52 @@ const ManuscriptViewer: React.FC<ManuscriptViewerProps> = ({
       if (!windowSelection || windowSelection.rangeCount === 0) return;
 
       const range = windowSelection.getRangeAt(0);
-      const selectedText = range.toString().trim();
+      const selectedText = range.toString();
 
-      if (selectedText.length === 0) return;
+      if (selectedText.trim().length === 0) return;
 
-      // Simple approach: find the selected text in the content string
-      const contentText = content;
-      const startIndex = contentText.indexOf(selectedText);
+      // Get the position of the selection within the content
+      try {
+        // Create a range from the start of the content to the start of the selection
+        const preRange = document.createRange();
+        preRange.selectNodeContents(contentRef.current);
+        preRange.setEnd(range.startContainer, range.startOffset);
 
-      if (startIndex !== -1) {
+        // Get the text before the selection to calculate the start position
+        const textBeforeSelection = preRange.toString();
+        const startIndex = textBeforeSelection.length;
         const endIndex = startIndex + selectedText.length;
-        onTextSelection(startIndex, endIndex, selectedText);
+
+        console.log('Selection details:', {
+          selectedText: selectedText.substring(0, 100) + (selectedText.length > 100 ? '...' : ''),
+          selectedLength: selectedText.length,
+          startIndex,
+          endIndex,
+          contentLength: content.length
+        });
+
+        // Validate that the indices are within bounds
+        if (startIndex >= 0 && endIndex <= content.length && startIndex < endIndex) {
+          onTextSelection(startIndex, endIndex, selectedText);
+        } else {
+          console.warn('Selection indices out of bounds, trying fallback');
+          // Fallback to simple indexOf approach
+          const trimmedText = selectedText.trim();
+          const fallbackStart = content.indexOf(trimmedText);
+          if (fallbackStart !== -1) {
+            const fallbackEnd = fallbackStart + trimmedText.length;
+            onTextSelection(fallbackStart, fallbackEnd, trimmedText);
+          }
+        }
+      } catch (error) {
+        console.error('Selection error:', error);
+        // Fallback to simple indexOf approach
+        const trimmedText = selectedText.trim();
+        const startIndex = content.indexOf(trimmedText);
+        if (startIndex !== -1) {
+          const endIndex = startIndex + trimmedText.length;
+          onTextSelection(startIndex, endIndex, trimmedText);
+        }
       }
 
       setIsSelecting(false);

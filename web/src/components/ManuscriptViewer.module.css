@@ -33,6 +33,7 @@
   color: #222;
   border-bottom: 2px solid #eee;
   padding-bottom: 0.5rem;
+  user-select: text;
 }
 
 .heading2 {
@@ -40,6 +41,7 @@
   font-weight: bold;
   margin: 1.5rem 0 0.75rem 0;
   color: #333;
+  user-select: text;
 }
 
 .heading3 {
@@ -47,11 +49,13 @@
   font-weight: bold;
   margin: 1rem 0 0.5rem 0;
   color: #444;
+  user-select: text;
 }
 
 .paragraph {
   margin: 0 0 1rem 0;
   text-align: justify;
+  user-select: text;
 }
 
 /* Removed selectedText class to prevent DOM corruption */
